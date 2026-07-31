@@ -34,20 +34,23 @@ const PlatformSelector = ({ selected, onChange }) => {
 
   return (
     <div>
-      <div className="mb-3 flex items-center justify-between">
-        <label className="text-xs font-semibold text-muted uppercase tracking-wider">
-          Target Platforms
-        </label>
+      <div className="mb-3 flex items-center justify-between gap-4">
+        <div>
+          <label className="block text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+            Target platforms
+          </label>
+          <p className="mt-1 text-xs text-muted">Select every channel that should receive this post.</p>
+        </div>
         <button
           type="button"
           onClick={selectAll}
-          className="text-xs font-medium text-primary hover:underline transition-all"
+          className="shrink-0 text-xs font-semibold text-primary transition-opacity hover:opacity-80"
         >
           {isAllSelected ? 'Deselect All' : 'Select All'}
         </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2">
         {platforms.map(({ id, label, icon: Icon }) => {
           const isSelected = selected.includes(id);
           return (
@@ -55,23 +58,24 @@ const PlatformSelector = ({ selected, onChange }) => {
               key={id}
               type="button"
               onClick={() => togglePlatform(id)}
-              className={`flex items-center justify-between rounded-xl border p-3.5 transition-all duration-200 ${
+              aria-pressed={isSelected}
+              className={`flex items-center justify-between rounded-xl border p-3.5 text-left transition-colors duration-200 ${
                 isSelected
-                  ? 'border-primary bg-bg text-white font-semibold'
-                  : 'border-border bg-bg/50 text-muted font-medium hover:border-primary/40 hover:text-white'
+                  ? 'border-primary bg-primary/10 text-white'
+                  : 'border-border bg-bg text-muted hover:border-primary/50 hover:text-white'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-lg border transition-colors ${
+                  className={`flex h-9 w-9 items-center justify-center rounded-lg border transition-colors ${
                     isSelected
-                      ? 'border-primary/30 bg-primary/10 text-primary'
+                      ? 'border-primary bg-primary text-white'
                       : 'border-border bg-card text-muted'
                   }`}
                 >
                   <Icon size={16} />
                 </div>
-                <span className="text-sm">{label}</span>
+                <span className="text-sm font-semibold">{label}</span>
               </div>
 
               <div

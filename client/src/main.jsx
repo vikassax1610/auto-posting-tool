@@ -23,10 +23,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               fontSize: '0.875rem',
             },
             success: {
-              iconTheme: { primary: '#3B82F6', secondary: '#FFFFFF' },
+              iconTheme: { primary: '#22C55E', secondary: '#FFFFFF' },
             },
             error: {
-              iconTheme: { primary: '#9CA3AF', secondary: '#181A20' },
+              iconTheme: { primary: '#EF4444', secondary: '#FFFFFF' },
             },
           }}
         />

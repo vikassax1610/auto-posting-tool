@@ -19,7 +19,7 @@ const PublishResult = ({ results }) => {
   return (
     <div>
       <h3 className="mb-3 text-xs font-semibold text-muted uppercase tracking-wider">
-        Publish Results
+        Publishing results
       </h3>
       <div className="space-y-2.5">
         {Object.entries(results).map(([platform, result]) => {
@@ -32,10 +32,10 @@ const PublishResult = ({ results }) => {
           return (
             <div
               key={platform}
-              className="flex items-center justify-between rounded-xl border border-border bg-bg px-4 py-3"
+              className="flex flex-col gap-3 rounded-xl border border-border bg-bg px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-card border border-border text-primary">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-border bg-card text-primary">
                   <Icon size={16} />
                 </div>
                 <span className="text-sm font-semibold text-white">
@@ -45,19 +45,15 @@ const PublishResult = ({ results }) => {
 
               <div className="flex items-center gap-2">
                 {isSuccess ? (
-                  <>
-                    <CheckCircle size={16} className="text-primary" />
-                    <span className="text-sm font-semibold text-primary">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-success/40 bg-success/10 px-2.5 py-1 text-xs font-semibold text-success">
+                    <CheckCircle size={14} />
                       Published
-                    </span>
-                  </>
+                  </span>
                 ) : (
-                  <>
-                    <XCircle size={16} className="text-muted" />
-                    <span className="text-sm text-muted">
+                  <span className="inline-flex max-w-full items-center gap-1.5 rounded-full border border-error/40 bg-error/10 px-2.5 py-1 text-xs font-medium text-error">
+                    <XCircle size={14} className="shrink-0" />
                       {result.error || 'Failed'}
-                    </span>
-                  </>
+                  </span>
                 )}
               </div>
             </div>

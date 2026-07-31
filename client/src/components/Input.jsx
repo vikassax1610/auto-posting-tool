@@ -4,19 +4,19 @@ const Input = ({ label, id, error, className = '', ...props }) => {
       {label && (
         <label
           htmlFor={id}
-          className="mb-2 block text-xs font-semibold text-muted uppercase tracking-wider"
+          className="mb-2 block text-xs font-semibold uppercase tracking-[0.12em] text-muted"
         >
           {label}
         </label>
       )}
       <input
         id={id}
-        className={`w-full rounded-xl border bg-bg px-4 py-3 text-sm text-white placeholder-muted/50 outline-none transition-colors focus:border-primary ${
-          error ? 'border-muted' : 'border-border'
+        className={`h-11 w-full rounded-xl border bg-bg px-3.5 text-sm text-white placeholder:text-muted/70 outline-none transition-colors duration-200 focus:border-primary focus:ring-2 focus:ring-primary/20 ${
+          error ? 'border-error' : 'border-border hover:border-muted/50'
         }`}
         {...props}
       />
-      {error && <p className="mt-1.5 text-xs text-muted font-medium">{error}</p>}
+      {error && <p className="mt-1.5 text-xs font-medium text-error">{error}</p>}
     </div>
   );
 };
