@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import { getFacebookPage } from '../services/facebook.service.js';
+import { getInstagramBusinessAccount } from '../services/instagram.service.js';
 
 const VALID_PLATFORMS = ['linkedin', 'facebook', 'instagram', 'pinterest'];
 
@@ -79,6 +80,31 @@ export const connectAccount = async (req, res) => {
         message: 'Facebook Page connected successfully',
         account: toPublicAccount(user.connectedAccounts.facebook),
       });
+    }
+
+    if (platform === 'instagram') {
+      try {
+        const { accessToken, pageId } = getFacebookPageCredentials();
+        const page = await getFacebookPage(accessToken, pageId);
+        const instagramAccount = await getInstagramBusinessAccount(page.accessToken, page.id);
+
+        user.connectedAccounts.instagram = {
+          connected: true,
+          accessToken: page.accessToken,
+          accountId: instagramAccount.id,
+          accountName: instagramAccount.username || 'Instagram Professional Account',
+        };
+        await user.save();
+
+        return res.json({
+          message: 'Instagram Professional account connected successfully',
+          account: toPublicAccount(user.connectedAccounts.instagram),
+        });
+      } catch (error) {
+        return res.status(400).json({
+          message: `Instagram account could not be verified: ${error.message}`,
+        });
+      }
     }
 
     // The remaining integrations still use their existing placeholder flow.

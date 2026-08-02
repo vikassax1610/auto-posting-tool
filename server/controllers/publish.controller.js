@@ -4,6 +4,7 @@ import { publishToLinkedIn } from '../services/linkedin.service.js';
 import { publishToFacebook } from '../services/facebook.service.js';
 import { publishToInstagram } from '../services/instagram.service.js';
 import { publishToPinterest } from '../services/pinterest.service.js';
+import cloudinaryUpload from '../utils/cloudinaryUpload.js';
 
 // Publisher registry — maps platform name to its publish function
 const publishers = {
@@ -47,14 +48,32 @@ export const publish = async (req, res) => {
 
     // Fan out to selected publishers using Promise.allSettled
     // Each service receives the raw file buffer — no intermediate storage
-    const tasks = platforms.map((platform) => {
+    const publishToPlatform = async (platform) => {
       const account = req.user.connectedAccounts?.[platform];
 
       if (!account?.connected || !account.accessToken || !account.accountId) {
-        return Promise.resolve({
+        return {
           status: 'failed',
           error: `${platform} account is not connected. Connect it before publishing.`,
-        });
+        };
+      }
+
+      if (platform === 'instagram') {
+        try {
+          const { url } = await cloudinaryUpload(req.file.buffer, mediaType);
+          return publishToInstagram(
+            caption,
+            url,
+            mediaType,
+            account.accessToken,
+            account.accountId
+          );
+        } catch (error) {
+          return {
+            status: 'failed',
+            error: error.message || 'Instagram image upload failed.',
+          };
+        }
       }
 
       return publishers[platform](
@@ -64,7 +83,9 @@ export const publish = async (req, res) => {
         account.accessToken,
         account.accountId
       );
-    });
+    };
+
+    const tasks = platforms.map(publishToPlatform);
 
     const settled = await Promise.allSettled(tasks);
 
