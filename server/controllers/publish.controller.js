@@ -47,9 +47,24 @@ export const publish = async (req, res) => {
 
     // Fan out to selected publishers using Promise.allSettled
     // Each service receives the raw file buffer — no intermediate storage
-    const tasks = platforms.map((platform) =>
-      publishers[platform](caption, req.file.buffer, mediaType, '', '')
-    );
+    const tasks = platforms.map((platform) => {
+      const account = req.user.connectedAccounts?.[platform];
+
+      if (!account?.connected || !account.accessToken || !account.accountId) {
+        return Promise.resolve({
+          status: 'failed',
+          error: `${platform} account is not connected. Connect it before publishing.`,
+        });
+      }
+
+      return publishers[platform](
+        caption,
+        req.file.buffer,
+        mediaType,
+        account.accessToken,
+        account.accountId
+      );
+    });
 
     const settled = await Promise.allSettled(tasks);
 
